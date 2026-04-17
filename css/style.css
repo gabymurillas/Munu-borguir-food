@@ -3,25 +3,17 @@
    ========================================================================== */
 :root {
     --primary: #DBA400;
-    /* Amarillo/Naranja cálido de la marca */
-    --primary-dark: #d8910d;
-    /* Botones normales */
-    --primary-hover: #f0a316;
-    /* Color de hover para botones */
-    --btn-whatsapp: #2aa354;
-    /* Verde Whatsapp más apagado según solicitud */
-    --btn-whatsapp-hover: #1f8546;
-
-    --dark: #121212;
-    --card-bg: #1e1e1e;
-    --card-border: rgba(255, 255, 255, 0.12);
-    /* Borde claro sutil */
-
-    --text-main: #ffffff;
-    --text-muted: #bbbbbb;
-
+    --primary-dark: #B88A00;
+    --primary-light: #FFD24D;
+    --bg-dark: #0A0A0A;
+    --card-bg: rgba(30, 30, 30, 0.7);
+    --card-border: rgba(255, 255, 255, 0.08);
+    --glass-bg: rgba(255, 255, 255, 0.03);
+    --text-main: #FFFFFF;
+    --text-muted: rgba(255, 255, 255, 0.6);
     --font-heading: 'Bebas Neue', cursive;
     --font-body: 'Poppins', sans-serif;
+    --shadow-premium: 0 15px 35px rgba(0, 0, 0, 0.4);
 }
 
 body {
@@ -149,19 +141,21 @@ header {
 
 .card {
     background: var(--card-bg);
-    border-radius: 16px;
-    overflow: hidden;
-    box-shadow: 0 10px 25px rgba(0, 0, 0, 0.4);
+    backdrop-filter: blur(12px);
+    -webkit-backdrop-filter: blur(12px);
+    border-radius: 20px;
     border: 1px solid var(--card-border);
-    transition: 0.3s transform, 0.3s box-shadow;
+    transition: all 0.4s cubic-bezier(0.165, 0.84, 0.44, 1);
     display: flex;
     flex-direction: column;
-    justify-content: space-between;
+    overflow: hidden;
+    box-shadow: var(--shadow-premium);
 }
 
 .card:hover {
-    transform: translateY(-5px);
-    box-shadow: 0 15px 25px rgba(0, 0, 0, 0.5);
+    transform: translateY(-8px);
+    border-color: var(--primary);
+    box-shadow: 0 20px 40px rgba(0, 0, 0, 0.5);
 }
 
 .combo-card {
@@ -206,9 +200,7 @@ header {
     color: var(--primary);
 }
 
-.precio-valor {
-    /* Clase auxiliar usada por JS */
-}
+/* .precio-valor { Clase auxiliar usada por JS } */
 
 .action-buttons {
     display: flex;
@@ -277,7 +269,29 @@ header {
    8. Carrito de Compras (Widget & Modal)
    ========================================================================== */
 .cart-glass {
-    bottom: 80px; 
+    bottom: 80px;
+}
+
+.btn-pm-glass {
+    right: auto;
+    left: 20px;
+}
+
+.btn-copy-mini {
+    background: rgba(255, 255, 255, 0.1);
+    border: 1px solid rgba(255, 255, 255, 0.2);
+    border-radius: 6px;
+    color: #fff;
+    cursor: pointer;
+    font-size: 1rem;
+    padding: 4px 8px;
+    transition: all 0.2s ease;
+}
+
+.btn-copy-mini:hover {
+    background: var(--primary);
+    border-color: var(--primary);
+    transform: scale(1.1);
 }
 
 .cart-badge {
@@ -290,19 +304,19 @@ header {
     position: absolute;
     top: -5px;
     right: -5px;
-    box-shadow: 0 2px 5px rgba(0,0,0,0.4);
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.4);
 }
 
 .cart-modal {
-    display: none; 
-    position: fixed; 
-    z-index: 2000; 
+    display: none;
+    position: fixed;
+    z-index: 2000;
     left: 0;
     top: 0;
-    width: 100%; 
-    height: 100%; 
-    overflow: hidden; 
-    background-color: rgba(0,0,0,0.6); 
+    width: 100%;
+    height: 100%;
+    overflow: hidden;
+    background-color: rgba(0, 0, 0, 0.6);
     backdrop-filter: blur(5px);
 }
 
@@ -357,9 +371,11 @@ header {
     flex-grow: 1;
     margin-bottom: 15px;
 }
+
 .cart-items-container::-webkit-scrollbar {
     width: 5px;
 }
+
 .cart-items-container::-webkit-scrollbar-thumb {
     background: #555;
     border-radius: 5px;
@@ -440,4 +456,74 @@ footer {
     font-size: 0.9rem;
     padding: 20px;
     margin-top: 20px;
+}
+
+/* ==========================================================================
+   10. Mejoras UI/UX (Skeletons & Animaciones)
+   ========================================================================== */
+
+/* Skeleton Loader */
+.skeleton {
+    background: #2a2a2a;
+    background: linear-gradient(110deg, #2a2a2a 8%, #333 18%, #2a2a2a 33%);
+    border-radius: 16px;
+    background-size: 200% 100%;
+    animation: 1.5s shine linear infinite;
+}
+
+@keyframes shine {
+    to {
+        background-position-x: -200%;
+    }
+}
+
+.skeleton-card {
+    height: 180px;
+    margin-bottom: 20px;
+    opacity: 0.7;
+}
+
+/* Transiciones de Pestañas */
+.tab-content {
+    transition: opacity 0.3s ease, transform 0.3s ease;
+}
+
+.tab-content:not(.active) {
+    display: none;
+    opacity: 0;
+    transform: translateY(10px);
+}
+
+.tab-content.active {
+    display: grid;
+    opacity: 1;
+    transform: translateY(0);
+}
+
+/* Toast Notifications */
+.toast {
+    position: fixed;
+    top: 20px;
+    right: 20px;
+    background: var(--card-bg);
+    color: white;
+    padding: 12px 24px;
+    border-radius: 12px;
+    border: 1px solid var(--primary);
+    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.5);
+    z-index: 3000;
+    transform: translateY(-100px);
+    transition: 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+}
+
+.toast.show {
+    transform: translateY(0);
+}
+
+.toast-success {
+    border-color: #2aa354;
+}
+
+.toast-error {
+    border-color: #ff3b30;
 }

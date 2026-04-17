@@ -9,11 +9,12 @@ class UIController {
         this.cart.onCartUpdated = this.actualizarCarritoUI.bind(this);
     }
 
-    init() {
+    async init() {
         this.configurarBotonesTabs();
         this.configurarBotonMoneda();
+        this.configurarPagoMovilBtn();
         this.configurarCarritoBtn();
-        this.renderizarMenu();
+        await this.renderizarMenu();
         // Carga inicial del estado base
         this.actualizarCarritoUI(this.cart.getItems());
     }
@@ -48,10 +49,64 @@ class UIController {
                 modalCart.classList.remove('show');
             }
         });
-        
+
         checkoutBtn.addEventListener('click', () => {
-            WhatsAppService.enviarCarrito(this.cart.getItems(), this.cart.getTotal());
+            const totalUsd = this.cart.getTotal();
+            const totalBs = this.currency.tasaOficial > 0 ? this.currency.convertir(totalUsd) : 0;
+            WhatsAppService.enviarCarrito(this.cart.getItems(), totalUsd, totalBs);
         });
+    }
+
+    configurarPagoMovilBtn() {
+        const btnPm = document.getElementById('btn-pm');
+        const modalPm = document.getElementById('pm-modal');
+        const closePm = document.getElementById('close-pm');
+        const btnCopy = document.getElementById('btn-copy-pm');
+        const feedback = document.getElementById('pm-copy-feedback');
+
+        if (btnPm && modalPm && closePm) {
+            btnPm.addEventListener('click', () => {
+                modalPm.classList.add('show');
+            });
+
+            closePm.addEventListener('click', () => {
+                modalPm.classList.remove('show');
+            });
+
+            window.addEventListener('click', (event) => {
+                if (event.target == modalPm) {
+                    modalPm.classList.remove('show');
+                }
+            });
+        }
+
+        const btnMinis = document.querySelectorAll('.btn-copy-mini');
+        btnMinis.forEach(btn => {
+            btn.addEventListener('click', () => {
+                const text = btn.getAttribute('data-copy');
+                navigator.clipboard.writeText(text).then(() => {
+                    feedback.innerText = `¡Dato copiado!`;
+                    feedback.style.opacity = '1';
+                    setTimeout(() => {
+                        feedback.style.opacity = '0';
+                    }, 2500);
+                });
+            });
+        });
+
+        if (btnCopy) {
+            btnCopy.addEventListener('click', () => {
+                const textToCopy = "0102\n04243344673\n8997068";
+                navigator.clipboard.writeText(textToCopy).then(() => {
+                    feedback.style.opacity = '1';
+                    setTimeout(() => {
+                        feedback.style.opacity = '0';
+                    }, 2500);
+                }).catch(err => {
+                    console.error('Error al copiar: ', err);
+                });
+            });
+        }
     }
 
     actualizarCarritoUI(items) {
@@ -60,7 +115,7 @@ class UIController {
 
         const container = document.getElementById('cart-items-container');
         container.innerHTML = '';
-        
+
         if (items.length === 0) {
             container.innerHTML = '<p style="text-align: center; color: #bbb; padding: 30px 0;">🛒 Tu carrito está vacío.</p>';
             document.getElementById('btn-checkout').style.display = 'none';
@@ -82,10 +137,10 @@ class UIController {
                 `;
             });
         }
-        
+
         const totalUsd = this.cart.getTotal();
         document.getElementById('cart-total-usd').innerText = `$${totalUsd.toFixed(2)}`;
-        
+
         if (this.currency.tasaOficial > 0) {
             document.getElementById('cart-total-ves').innerText = `Bs. ${this.currency.convertir(totalUsd)}`;
         } else {
@@ -98,12 +153,41 @@ class UIController {
         botones.forEach(btn => {
             btn.addEventListener('click', (e) => this.cambiarTab(e.target.dataset.tab));
         });
+
+        const tabsContainer = document.querySelector('.tabs');
+        if (tabsContainer) {
+            let isDown = false;
+            let startX;
+            let scrollLeft;
+
+            tabsContainer.addEventListener('mousedown', (e) => {
+                isDown = true;
+                tabsContainer.style.cursor = 'grabbing';
+                startX = e.pageX - tabsContainer.offsetLeft;
+                scrollLeft = tabsContainer.scrollLeft;
+            });
+            tabsContainer.addEventListener('mouseleave', () => {
+                isDown = false;
+                tabsContainer.style.cursor = 'grab';
+            });
+            tabsContainer.addEventListener('mouseup', () => {
+                isDown = false;
+                tabsContainer.style.cursor = 'grab';
+            });
+            tabsContainer.addEventListener('mousemove', (e) => {
+                if (!isDown) return;
+                e.preventDefault();
+                const x = e.pageX - tabsContainer.offsetLeft;
+                const walk = (x - startX) * 2; // Scroll-fast
+                tabsContainer.scrollLeft = scrollLeft - walk;
+            });
+        }
     }
 
     cambiarTab(tabId) {
         document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
         document.querySelectorAll('.tab-content').forEach(c => c.classList.remove('active'));
-        
+
         document.querySelector(`.tab-btn[data-tab="${tabId}"]`)?.classList.add('active');
         document.getElementById(tabId)?.classList.add('active');
     }
@@ -123,7 +207,7 @@ class UIController {
     actualizarPreciosUI(enDolares) {
         const botonTexto = document.getElementById('texto-moneda');
         botonTexto.innerText = enDolares ? 'VES / USD' : 'USD / VES';
-        
+
         document.querySelectorAll('.precio-valor').forEach(elemento => {
             const dolarBase = parseFloat(elemento.dataset.usd);
             if (enDolares) {
@@ -142,9 +226,11 @@ class UIController {
                 dataNombre = 'Papas ' + precioObj.label;
             } else if (nombre === 'Refresco') {
                 dataNombre = precioObj.label === '400ml' ? 'Refresco 400ml' : 'Glup 1 Litro';
+            } else if (precioObj.label.toLowerCase() === 'un combo') {
+                dataNombre = 'Combo ' + nombre;
             }
             dataNombre = dataNombre.replace(/'/g, "\\'");
-            
+
             let label = precioObj.label;
             if (nombre === 'Refresco') label = precioObj.label;
 
@@ -163,13 +249,13 @@ class UIController {
         const titulo = producto.tituloCard || producto.nombre.toUpperCase();
         const descripcion = producto.desc ? `<p>${producto.desc}</p>` : '';
         const comboClass = producto.esCombo ? 'combo-card' : '';
-        
+
         const textoPrecios = producto.precios.map(p => {
-             let labelStr = producto.precios.length > 1 ? p.label + ' ' : '';
-             if (producto.nombre === 'Refresco' || producto.nombre === 'Papas') {
+            let labelStr = producto.precios.length > 1 ? p.label + ' ' : '';
+            if (producto.nombre === 'Refresco' || producto.nombre === 'Papas') {
                 labelStr = p.label + ' ';
-             }
-             return `${labelStr}<span class="precio-valor" data-usd="${p.monto}">$${p.monto.toFixed(2)}</span>`;
+            }
+            return `${labelStr}<span class="precio-valor" data-price-id="${p.id}" data-usd="${p.monto}">$${p.monto.toFixed(2)}</span>`;
         }).join(' | ');
 
         const botones = this.crearBotonesDePrecio(producto.precios, producto.nombre, !!producto.esCombo);
@@ -190,21 +276,105 @@ class UIController {
         `;
     }
 
-    renderizarMenu() {
+    async renderizarMenu() {
         const container = document.querySelector('.menu-sections-container');
         if (!container) return;
-        
+
+        // Renderizar Skeletons iniciales
+        container.innerHTML = `
+            <div class="tab-content active" style="display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 20px;">
+                <div class="skeleton skeleton-card"></div>
+                <div class="skeleton skeleton-card"></div>
+                <div class="skeleton skeleton-card"></div>
+                <div class="skeleton skeleton-card"></div>
+                <div class="skeleton skeleton-card"></div>
+                <div class="skeleton skeleton-card"></div>
+            </div>
+        `;
+
+        // El objeto supabaseConfig ya está disponible globalmente
+        const { createClient } = supabase;
+        const supabaseClient = createClient(supabaseConfig.url, supabaseConfig.anonKey);
+
+        // Fetch de categorías, productos y precios
+        const { data: categories } = await supabaseClient.from('categories').select('*').order('id');
+        const { data: products } = await supabaseClient.from('products').select('*, prices(*)');
+
+        if (!categories || !products) {
+            container.innerHTML = '<p style="text-align:center; padding: 20px; color: red;">Error al cargar el menú.</p>';
+            return;
+        }
+
         container.innerHTML = '';
 
-        for (const categoria in MenuData) {
+        categories.forEach(category => {
             const div = document.createElement('div');
-            div.id = categoria;
-            div.className = `tab-content ${categoria === 'perros' ? 'active' : ''}`;
-            
-            const htmlTarjetas = MenuData[categoria].map(prod => this.crearHTMLCard(prod)).join('');
+            div.id = category.slug;
+            div.className = `tab-content ${category.slug === 'perros' ? 'active' : ''}`;
+
+            const catProducts = products.filter(p => p.category_id === category.id);
+            const htmlTarjetas = catProducts.map(prod => {
+                // Adaptar el objeto de la DB al formato que espera crearHTMLCard
+                const adaptedProd = {
+                    nombre: prod.name,
+                    desc: prod.description,
+                    tituloCard: prod.titulo_card,
+                    esCombo: prod.is_combo,
+                    precios: prod.prices.map(pr => {
+                        let finalLabel = pr.label;
+                        if (category.slug === 'perros' && pr.label.toLowerCase() === '2x') {
+                            finalLabel = 'Un combo';
+                        }
+                        return { id: pr.id, label: finalLabel, monto: parseFloat(pr.amount) };
+                    })
+                };
+                return this.crearHTMLCard(adaptedProd);
+            }).join('');
+
             div.innerHTML = htmlTarjetas;
-            
             container.appendChild(div);
-        }
+        });
+
+        this.setupRealtime(supabaseClient);
+    }
+
+    setupRealtime(client) {
+        client
+            .channel('any')
+            .on('postgres_changes', { event: 'UPDATE', schema: 'public', table: 'prices' }, payload => {
+                const { id, amount } = payload.new;
+                const elements = document.querySelectorAll(`[data-usd][id="price-${id}"], [data-usd].precio-valor`);
+                // Como los IDs de los elementos de precio no son únicos por producto (pueden estar en varias partes),
+                // buscamos por data-usd que coincida con el ID de la base de datos si fuera necesario.
+                // Pero lo más simple es buscar todos los .precio-valor que tengan el dataset id correspondiente.
+
+                document.querySelectorAll(`.precio-valor[data-price-id="${id}"]`).forEach(el => {
+                    const newPrice = parseFloat(amount);
+                    el.dataset.usd = newPrice;
+                    if (this.currency.monedaActual === 'USD') {
+                        el.innerText = `$${newPrice.toFixed(2)}`;
+                    } else {
+                        el.innerText = `Bs. ${this.currency.convertir(newPrice)}`;
+                    }
+                });
+            })
+            .on('postgres_changes', { event: 'UPDATE', schema: 'public', table: 'products' }, payload => {
+                // Si cambia el nombre o desc, podríamos recargar o actualizar campos
+                // Por ahora priorizamos precios que es lo más dinámico
+            })
+            .subscribe();
+    }
+
+    showToast(message, type = 'success') {
+        const toast = document.createElement('div');
+        toast.className = `toast toast-${type}`;
+        toast.innerText = message;
+        document.body.appendChild(toast);
+
+        setTimeout(() => toast.classList.add('show'), 100);
+        setTimeout(() => {
+            toast.classList.remove('show');
+            setTimeout(() => toast.remove(), 400);
+        }, 3000);
     }
 }

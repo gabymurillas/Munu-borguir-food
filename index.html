@@ -4,9 +4,12 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <meta name="description" content="Menú de comida rápida Borguir Food. Haz tus pedidos de hamburguesas y perros calientes.">
+    <meta name="description"
+        content="Menú de comida rápida Borguir Food. Haz tus pedidos de hamburguesas y perros calientes.">
     <title>Borguir Food | Menú</title>
     <link rel="stylesheet" href="css/style.css">
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+    <script src="js/supabase-config.js"></script>
     <script src="js/config.js" defer></script>
     <script src="js/data.js" defer></script>
     <script src="js/services/WhatsAppService.js" defer></script>
@@ -23,7 +26,7 @@
     <header>
         <h1 class="logo">BORGUIR <span>FOOD</span></h1>
         <p class="tagline">¡Las más brutales de la zona!</p>
-        
+
         <div class="indicator-bcv">
             Tasa Oficial BCV: <span id="precio-bcv">Cargando...</span>
         </div>
@@ -35,7 +38,7 @@
     </button>
 
     <main class="menu-container">
-        
+
         <nav class="tabs" aria-label="Categorías del Menú">
             <button class="tab-btn active" data-tab="perros">🌭 Perros</button>
             <button class="tab-btn" data-tab="burgers">🍔 Hamburguesas</button>
@@ -49,10 +52,16 @@
 
         <!-- El contenido se generará de manera dinámica via Javascript separando la Vista de los Datos -->
         <div class="menu-sections-container">
-           <!-- Javascript inyectará aquí los divs con id="perros", id="burgers", etc. --> 
+            <!-- Javascript inyectará aquí los divs con id="perros", id="burgers", etc. -->
         </div>
 
     </main>
+
+    <!-- Botón Flotante Pago Móvil -->
+    <button id="btn-pm" class="btn-glass btn-pm-glass" aria-label="Ver Pago Móvil">
+        <span class="icon">📱</span>
+        <span>Pago Móvil</span>
+    </button>
 
     <!-- Botón Flotante Carrito -->
     <button id="btn-cart" class="btn-glass cart-glass" aria-label="Ver Carrito">
@@ -76,6 +85,36 @@
                     Enviar a WhatsApp
                 </button>
             </div>
+        </div>
+    </div>
+
+    <!-- Modal Pago Móvil -->
+    <div id="pm-modal" class="cart-modal">
+        <div class="cart-content" style="max-width: 350px;">
+            <span class="close-cart" id="close-pm">&times;</span>
+            <h2 style="margin-bottom: 20px;"><span class="icon">🏦</span> Pago Móvil</h2>
+
+            <div
+                style="background: rgba(255,255,255,0.05); padding: 20px; border-radius: 15px; border: 1px solid rgba(255,255,255,0.1); text-align: left; margin-bottom: 20px;">
+                <p style="margin: 8px 0; font-size: 1.1rem; color: #fff;"><strong>Banco:</strong> Banco de Venezuela</p>
+                <p style="margin: 8px 0; font-size: 1.1rem; color: #fff;"><strong>Código:</strong> 0102</p>
+                <div style="display: flex; align-items: center; justify-content: space-between; margin: 4px 0;">
+                    <p style="margin: 0; font-size: 1.1rem; color: #fff;"><strong>Teléfono:</strong> 04243344673</p>
+                    <button class="btn-copy-mini" data-copy="04243344673" aria-label="Copiar Teléfono">📋</button>
+                </div>
+                <div style="display: flex; align-items: center; justify-content: space-between; margin: 4px 0;">
+                    <p style="margin: 0; font-size: 1.1rem; color: #fff;"><strong>C.I:</strong> 8997068</p>
+                    <button class="btn-copy-mini" data-copy="8997068" aria-label="Copiar Cédula">📋</button>
+                </div>
+            </div>
+
+            <button id="btn-copy-pm" class="btn-whatsapp checkout-btn"
+                style="background: var(--primary); color: #121212; border: none; font-weight: 700;">
+                <span class="icon">📋</span> Copiar Datos
+            </button>
+            <p id="pm-copy-feedback"
+                style="color: #2aa354; font-size: 0.9rem; margin-top: 10px; opacity: 0; transition: opacity 0.3s; text-align: center;">
+                ¡Datos copiados exitosamente!</p>
         </div>
     </div>
 
