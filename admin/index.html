@@ -16,13 +16,14 @@
 
 <body>
     <div class="admin-nav">
-        <h1>BORGUIR <span style="color:var(--primary)">MANAGER</span></h1>
-        <div style="display: flex; gap: 1rem; align-items: center;">
-            <input type="text" id="admin-search" placeholder="🔍 Buscar producto..."
-                style="padding: 0.6rem 1.2rem; border-radius: 50px; border: 1px solid var(--border); background: rgba(255,255,255,0.08); color: white; width: 220px; outline: none;">
+        <div class="nav-top">
+            <h1>BORGUIR <span style="color:var(--primary)">MANAGER</span></h1>
             <a href="../index.html" class="btn-menu-link">
-                <i class="ph ph-storefront"></i> Ver Menú
+                <i class="ph ph-storefront"></i> <span>Ver Menú</span>
             </a>
+        </div>
+        <div class="nav-search">
+            <input type="text" id="admin-search" placeholder="🔍 Buscar producto..." class="search-input">
         </div>
     </div>
 
@@ -51,7 +52,31 @@
         </div>
     </div>
 
-    <button class="fab" onclick="showAddModal()">+</button>
+    <button class="fab" style="bottom: 110px; background: var(--surface); color: var(--primary);"
+        onclick="showCategoryModal()" title="Añadir Categoría">📂</button>
+    <button class="fab" onclick="showAddModal()" title="Añadir Producto">+</button>
+
+    <div id="add-category-modal" class="modal">
+        <div class="modal-content">
+            <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 2rem;">
+                <h2 style="font-family: 'Bebas Neue', cursive; font-size: 2.2rem; margin: 0; color: var(--primary);">
+                    NUEVA CATEGORÍA</h2>
+                <span class="close-modal" onclick="hideCategoryModal()">&times;</span>
+            </div>
+            <form id="add-category-form">
+                <div class="form-group">
+                    <label>Nombre de Categoría (Usa emoji al inicio indicando su icono)</label>
+                    <input type="text" id="new-cat-name" required placeholder="Ej: 🍟 Ración de Papas">
+                </div>
+                <div class="form-group">
+                    <label>Slug (identificador único sin espacios o tildes)</label>
+                    <input type="text" id="new-cat-slug" required placeholder="Ej: racion-papas">
+                </div>
+                <button type="submit" class="btn-primary"
+                    style="width: 100%; justify-content: center; margin-top: 1rem;">Guardar Categoría</button>
+            </form>
+        </div>
+    </div>
 
     <div id="add-modal" class="modal">
         <div class="modal-content">

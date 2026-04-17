@@ -38,6 +38,10 @@ export class AdminState {
         this.products.push(product);
     }
 
+    addCategory(cat) {
+        this.categories.push(cat);
+    }
+
     setActiveCategory(id) {
         this.activeCategoryId = id;
     }

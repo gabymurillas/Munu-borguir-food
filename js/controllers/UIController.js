@@ -149,13 +149,15 @@ class UIController {
     }
 
     configurarBotonesTabs() {
-        const botones = document.querySelectorAll('.tab-btn');
-        botones.forEach(btn => {
-            btn.addEventListener('click', (e) => this.cambiarTab(e.target.dataset.tab));
-        });
-
         const tabsContainer = document.querySelector('.tabs');
         if (tabsContainer) {
+            // Event delegation for tab buttons
+            tabsContainer.addEventListener('click', (e) => {
+                const btn = e.target.closest('.tab-btn');
+                if (btn) this.cambiarTab(btn.dataset.tab);
+            });
+
+            // Drag to scroll logic
             let isDown = false;
             let startX;
             let scrollLeft;
@@ -305,12 +307,19 @@ class UIController {
             return;
         }
 
+        const tabsNav = document.getElementById('category-tabs-container');
+        if (tabsNav) {
+            tabsNav.innerHTML = categories.map((cat, index) =>
+                `<button class="tab-btn ${index === 0 ? 'active' : ''}" data-tab="${cat.slug}">${cat.name}</button>`
+            ).join('');
+        }
+
         container.innerHTML = '';
 
-        categories.forEach(category => {
+        categories.forEach((category, index) => {
             const div = document.createElement('div');
             div.id = category.slug;
-            div.className = `tab-content ${category.slug === 'perros' ? 'active' : ''}`;
+            div.className = `tab-content ${index === 0 ? 'active' : ''}`;
 
             const catProducts = products.filter(p => p.category_id === category.id);
             const htmlTarjetas = catProducts.map(prod => {

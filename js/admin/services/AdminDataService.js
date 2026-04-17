@@ -40,6 +40,15 @@ export class AdminDataService {
         return data;
     }
 
+    async createCategory(name, slug) {
+        const { data, error } = await this.client.from('categories')
+            .insert([{ name, slug }])
+            .select()
+            .single();
+        if (error) throw error;
+        return data;
+    }
+
     async createPrice(product_id, label, amount) {
         const { data, error } = await this.client.from('prices')
             .insert([{ product_id, label, amount }])

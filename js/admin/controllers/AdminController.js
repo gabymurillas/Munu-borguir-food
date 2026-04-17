@@ -76,12 +76,22 @@ export class AdminController {
         // Modals - Provide global functions for inline onclick references in HTML
         window.showAddModal = () => this.view.showAddModal(this.state.getCategories());
         window.hideAddModal = () => this.view.hideAddModal();
+        window.showCategoryModal = () => this.view.showCategoryModal();
+        window.hideCategoryModal = () => this.view.hideCategoryModal();
 
         // Add Product Form
         this.view.addProductForm.addEventListener('submit', (e) => {
             e.preventDefault();
             this.handleAddProduct();
         });
+
+        // Add Category Form
+        if (this.view.addCategoryForm) {
+            this.view.addCategoryForm.addEventListener('submit', (e) => {
+                e.preventDefault();
+                this.handleAddCategory();
+            });
+        }
     }
 
     async handleUpdateProductField(id, field, value) {
@@ -145,7 +155,23 @@ export class AdminController {
             this.updateUI();
             this.view.showToast('Producto creado con éxito');
         } catch (error) {
-            alert('Error: ' + error.message);
+            alert('Error al crear producto: ' + error.message);
+        }
+    }
+
+    async handleAddCategory() {
+        const name = document.getElementById('new-cat-name').value;
+        const slug = document.getElementById('new-cat-slug').value;
+
+        try {
+            const cat = await this.dataService.createCategory(name, slug);
+            this.state.addCategory(cat);
+
+            this.view.hideCategoryModal();
+            this.updateUI();
+            this.view.showToast('Categoría creada con éxito');
+        } catch (error) {
+            alert('Error al crear categoría: ' + error.message);
         }
     }
 }

@@ -8,6 +8,8 @@ export class AdminView {
         this.addModal = document.getElementById('add-modal');
         this.newCategorySelect = document.getElementById('new-category');
         this.addProductForm = document.getElementById('add-product-form');
+        this.addCategoryModal = document.getElementById('add-category-modal');
+        this.addCategoryForm = document.getElementById('add-category-form');
     }
 
     updateStats(categoriesCount, productsCount) {
@@ -93,6 +95,17 @@ export class AdminView {
     hideAddModal() {
         this.addModal.style.display = 'none';
         this.addProductForm.reset();
+    }
+
+    showCategoryModal() {
+        if (this.addCategoryModal) this.addCategoryModal.style.display = 'flex';
+    }
+
+    hideCategoryModal() {
+        if (this.addCategoryModal) {
+            this.addCategoryModal.style.display = 'none';
+            if (this.addCategoryForm) this.addCategoryForm.reset();
+        }
     }
 
     showToast(message, type = 'success') {

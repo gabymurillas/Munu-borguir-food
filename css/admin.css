@@ -16,23 +16,55 @@ body {
 }
 
 .admin-nav {
-    background: rgba(0, 0, 0, 0.8);
-    backdrop-filter: blur(10px);
-    padding: 1rem 2rem;
+    background: rgba(0, 0, 0, 0.95);
+    backdrop-filter: blur(15px);
+    -webkit-backdrop-filter: blur(15px);
+    padding: 1rem;
     display: flex;
-    justify-content: space-between;
-    align-items: center;
+    flex-direction: column;
+    gap: 1rem;
     border-bottom: 1px solid var(--border);
     position: sticky;
     top: 0;
     z-index: 100;
 }
 
+.nav-top {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    width: 100%;
+}
+
 .admin-nav h1 {
     font-family: 'Bebas Neue', cursive;
-    font-size: 1.5rem;
-    letter-spacing: 2px;
+    font-size: 1.4rem;
+    letter-spacing: 1px;
     margin: 0;
+    line-height: 1;
+}
+
+.nav-search {
+    width: 100%;
+}
+
+.search-input {
+    padding: 0.7rem 1.2rem;
+    border-radius: 50px;
+    border: 1px solid var(--border);
+    background: rgba(255, 255, 255, 0.05);
+    color: white;
+    width: 100%;
+    outline: none;
+    transition: 0.3s;
+    font-family: 'Poppins', sans-serif;
+    font-size: 0.9rem;
+}
+
+.search-input:focus {
+    border-color: var(--primary);
+    background: rgba(255, 255, 255, 0.1);
+    box-shadow: 0 0 10px rgba(219, 164, 0, 0.2);
 }
 
 .stats-container {
@@ -456,4 +488,56 @@ body {
     font-weight: 600;
     box-shadow: 0 5px 15px rgba(219, 164, 0, 0.4);
     transform: translateY(-3px);
+}
+
+/* Media Queries para Responsive */
+@media (min-width: 768px) {
+    .admin-nav {
+        flex-direction: row;
+        justify-content: space-between;
+        padding: 1rem 4rem;
+        gap: 2rem;
+    }
+
+    .nav-top {
+        width: auto;
+        gap: 2rem;
+    }
+
+    .nav-search {
+        width: auto;
+        flex: 1;
+        max-width: 400px;
+    }
+
+    .admin-nav h1 {
+        font-size: 1.8rem;
+    }
+
+    .admin-container {
+        padding: 0 4rem;
+        margin-top: 3rem;
+    }
+}
+
+@media (max-width: 600px) {
+    .btn-menu-link span {
+        display: none;
+    }
+
+    .btn-menu-link {
+        padding: 10px;
+        width: 40px;
+        height: 40px;
+        justify-content: center;
+        border-radius: 12px;
+    }
+
+    .admin-nav {
+        padding: 0.8rem 1.2rem;
+    }
+
+    .stat-card .value {
+        font-size: 2.5rem;
+    }
 }
