@@ -1,0 +1,443 @@
+/* ==========================================================================
+   1. Variables y Configuración Base
+   ========================================================================== */
+:root {
+    --primary: #DBA400;
+    /* Amarillo/Naranja cálido de la marca */
+    --primary-dark: #d8910d;
+    /* Botones normales */
+    --primary-hover: #f0a316;
+    /* Color de hover para botones */
+    --btn-whatsapp: #2aa354;
+    /* Verde Whatsapp más apagado según solicitud */
+    --btn-whatsapp-hover: #1f8546;
+
+    --dark: #121212;
+    --card-bg: #1e1e1e;
+    --card-border: rgba(255, 255, 255, 0.12);
+    /* Borde claro sutil */
+
+    --text-main: #ffffff;
+    --text-muted: #bbbbbb;
+
+    --font-heading: 'Bebas Neue', cursive;
+    --font-body: 'Poppins', sans-serif;
+}
+
+body {
+    background-color: var(--dark);
+    background-image: linear-gradient(rgba(11, 18, 32, 0.75), rgba(30, 41, 59, 0.35)), url('../img/fondo.jpg.jpeg');
+    background-size: cover;
+    background-position: center;
+    background-repeat: no-repeat;
+    background-attachment: fixed;
+    color: var(--text-main);
+    font-family: var(--font-body);
+    margin: 0;
+    padding-bottom: 50px;
+}
+
+/* ==========================================================================
+   2. Layout & Contenedores Principales
+   ========================================================================== */
+header {
+    text-align: center;
+    padding: 40px 20px;
+    background: linear-gradient(rgba(0, 0, 0, 0.7), rgba(0, 0, 0, 0.7)), url('img/hero.jpg');
+    background-size: cover;
+}
+
+.menu-container {
+    padding: 20px;
+    max-width: 1200px;
+    margin: auto;
+}
+
+/* ==========================================================================
+   3. Tipografía & Textos
+   ========================================================================== */
+.logo {
+    font-family: var(--font-heading);
+    font-size: 3rem;
+    margin: 0;
+    color: var(--text-main);
+}
+
+.logo span {
+    color: var(--primary);
+}
+
+.tagline {
+    font-size: 1.1rem;
+    margin-top: 5px;
+    color: var(--text-muted);
+}
+
+.indicator-bcv {
+    font-size: 1.1rem;
+    color: var(--primary);
+    font-weight: bold;
+    margin-top: 15px;
+}
+
+/* ==========================================================================
+   4. Componentes y UI (Pestañas)
+   ========================================================================== */
+.tabs {
+    display: flex;
+    overflow-x: auto;
+    gap: 10px;
+    padding-bottom: 10px;
+    margin-bottom: 25px;
+    scrollbar-width: none;
+}
+
+.tabs::-webkit-scrollbar {
+    display: none;
+}
+
+.tab-btn {
+    background: #333;
+    color: var(--text-main);
+    border: 2px solid transparent;
+    border-radius: 50px;
+    padding: 10px 20px;
+    font-family: var(--font-body);
+    font-weight: 600;
+    font-size: 0.95rem;
+    white-space: nowrap;
+    cursor: pointer;
+    transition: 0.3s background, 0.3s transform;
+}
+
+.tab-btn:hover {
+    background: #444;
+}
+
+.tab-btn.active {
+    background: var(--primary);
+    color: var(--dark);
+    border-color: var(--primary);
+    box-shadow: 0 4px 10px rgba(255, 204, 0, 0.4);
+}
+
+/* ==========================================================================
+   5. Tarjetas (Cards) de Menú
+   ========================================================================== */
+.tab-content {
+    display: none;
+    grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+    gap: 20px;
+}
+
+.tab-content.active {
+    display: grid;
+    animation: fadeIn 0.4s ease;
+}
+
+@keyframes fadeIn {
+    from {
+        opacity: 0;
+        transform: translateY(10px);
+    }
+
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+.card {
+    background: var(--card-bg);
+    border-radius: 16px;
+    overflow: hidden;
+    box-shadow: 0 10px 25px rgba(0, 0, 0, 0.4);
+    border: 1px solid var(--card-border);
+    transition: 0.3s transform, 0.3s box-shadow;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+}
+
+.card:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 15px 25px rgba(0, 0, 0, 0.5);
+}
+
+.combo-card {
+    border: 2px solid var(--primary) !important;
+}
+
+.card-info {
+    padding: 25px 20px;
+    display: flex;
+    flex-direction: column;
+    height: 100%;
+}
+
+.card-info h3 {
+    font-family: var(--font-heading);
+    font-size: 1.6rem;
+    margin: 0 0 15px 0;
+    letter-spacing: 1px;
+}
+
+.card-info p {
+    font-size: 0.95rem;
+    color: var(--text-muted);
+    margin-bottom: 25px;
+    line-height: 1.6;
+    flex-grow: 1;
+}
+
+.card-footer {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    gap: 15px;
+}
+
+/* ==========================================================================
+   6. Elementos Interactivos - Precios y Botones
+   ========================================================================== */
+.price {
+    font-size: 1.4rem;
+    font-weight: 700;
+    color: var(--primary);
+}
+
+.precio-valor {
+    /* Clase auxiliar usada por JS */
+}
+
+.action-buttons {
+    display: flex;
+    gap: 8px;
+    /* Sustituyendo el flex en línea */
+    flex-wrap: wrap;
+    justify-content: flex-end;
+}
+
+.btn-whatsapp {
+    background-color: var(--btn-whatsapp);
+    color: var(--text-main);
+    text-decoration: none;
+    border: 1px solid rgba(255, 255, 255, 0.8);
+    padding: 8px 18px;
+    border-radius: 12px;
+    font-weight: 600;
+    font-size: 0.95rem;
+    cursor: pointer;
+    transition: 0.3s transform, 0.3s background-color;
+    white-space: nowrap;
+}
+
+.btn-whatsapp:hover {
+    transform: scale(1.05);
+    background-color: var(--btn-whatsapp-hover);
+}
+
+/* ==========================================================================
+   7. Botón Flotante para Tipo de Cambio (Glassmorphism)
+   ========================================================================== */
+.btn-glass {
+    position: fixed;
+    bottom: 20px;
+    right: 20px;
+    background: rgba(255, 204, 0, 0.2);
+    backdrop-filter: blur(10px);
+    -webkit-backdrop-filter: blur(10px);
+    border: 1px solid rgba(255, 204, 0, 0.3);
+    color: var(--text-main);
+    padding: 12px 20px;
+    border-radius: 50px;
+    font-family: var(--font-body);
+    font-weight: 600;
+    font-size: 1rem;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    cursor: pointer;
+    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.3);
+    z-index: 1000;
+    transition: all 0.3s ease;
+}
+
+.btn-glass:hover {
+    background: rgba(255, 204, 0, 0.4);
+    transform: translateY(-3px);
+    box-shadow: 0 6px 20px rgba(0, 0, 0, 0.4);
+}
+
+.btn-glass .icon {
+    font-size: 1.2rem;
+}
+
+/* ==========================================================================
+   8. Carrito de Compras (Widget & Modal)
+   ========================================================================== */
+.cart-glass {
+    bottom: 80px; 
+}
+
+.cart-badge {
+    background-color: #ff3b30;
+    color: white;
+    border-radius: 50%;
+    padding: 2px 7px;
+    font-size: 0.8rem;
+    font-weight: bold;
+    position: absolute;
+    top: -5px;
+    right: -5px;
+    box-shadow: 0 2px 5px rgba(0,0,0,0.4);
+}
+
+.cart-modal {
+    display: none; 
+    position: fixed; 
+    z-index: 2000; 
+    left: 0;
+    top: 0;
+    width: 100%; 
+    height: 100%; 
+    overflow: hidden; 
+    background-color: rgba(0,0,0,0.6); 
+    backdrop-filter: blur(5px);
+}
+
+.cart-modal.show {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    animation: fadeIn 0.3s ease;
+}
+
+.cart-content {
+    background-color: var(--card-bg);
+    margin: auto;
+    padding: 20px;
+    border: 1px solid var(--card-border);
+    width: 90%;
+    max-width: 450px;
+    border-radius: 20px;
+    position: relative;
+    max-height: 85vh;
+    display: flex;
+    flex-direction: column;
+}
+
+.cart-content h2 {
+    font-family: var(--font-heading);
+    letter-spacing: 1px;
+    margin-top: 0;
+    border-bottom: 1px solid var(--card-border);
+    padding-bottom: 10px;
+}
+
+.close-cart {
+    color: var(--text-muted);
+    float: right;
+    font-size: 28px;
+    font-weight: bold;
+    position: absolute;
+    right: 20px;
+    top: 15px;
+}
+
+.close-cart:hover,
+.close-cart:focus {
+    color: white;
+    text-decoration: none;
+    cursor: pointer;
+}
+
+.cart-items-container {
+    overflow-y: auto;
+    flex-grow: 1;
+    margin-bottom: 15px;
+}
+.cart-items-container::-webkit-scrollbar {
+    width: 5px;
+}
+.cart-items-container::-webkit-scrollbar-thumb {
+    background: #555;
+    border-radius: 5px;
+}
+
+.cart-item {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 10px 0;
+    border-bottom: 1px solid var(--card-border);
+}
+
+.cart-item-details h4 {
+    margin: 0 0 5px 0;
+    font-size: 1rem;
+}
+
+.cart-item-price {
+    color: var(--primary);
+    font-weight: bold;
+}
+
+.cart-item-actions {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+}
+
+.qty-btn {
+    background: #333;
+    border: none;
+    color: white;
+    width: 28px;
+    height: 28px;
+    border-radius: 5px;
+    cursor: pointer;
+    font-weight: bold;
+    font-size: 1.1rem;
+}
+
+.qty-btn:hover {
+    background: #555;
+}
+
+.cart-footer {
+    border-top: 1px solid var(--card-border);
+    padding-top: 15px;
+    display: flex;
+    flex-direction: column;
+    gap: 15px;
+}
+
+.cart-totals {
+    display: flex;
+    justify-content: space-between;
+    font-size: 1.2rem;
+}
+
+.bcv-convers {
+    font-size: 0.95rem;
+    color: var(--text-muted);
+}
+
+.checkout-btn {
+    width: 100%;
+    text-align: center;
+    font-size: 1.1rem;
+    padding: 12px;
+}
+
+/* ==========================================================================
+   9. Misceláneo
+   ========================================================================== */
+footer {
+    text-align: center;
+    color: var(--text-muted);
+    font-size: 0.9rem;
+    padding: 20px;
+    margin-top: 20px;
+}

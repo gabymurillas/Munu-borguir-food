@@ -1,0 +1,88 @@
+<!DOCTYPE html>
+<html lang="es">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="Menú de comida rápida Borguir Food. Haz tus pedidos de hamburguesas y perros calientes.">
+    <title>Borguir Food | Menú</title>
+    <link rel="stylesheet" href="css/style.css">
+    <script src="js/config.js" defer></script>
+    <script src="js/data.js" defer></script>
+    <script src="js/services/WhatsAppService.js" defer></script>
+    <script src="js/services/CurrencyService.js" defer></script>
+    <script src="js/services/CartService.js" defer></script>
+    <script src="js/controllers/UIController.js" defer></script>
+    <script src="js/app.js" defer></script>
+    <link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Poppins:wght@300;400;600&display=swap"
+        rel="stylesheet">
+</head>
+
+<body>
+
+    <header>
+        <h1 class="logo">BORGUIR <span>FOOD</span></h1>
+        <p class="tagline">¡Las más brutales de la zona!</p>
+        
+        <div class="indicator-bcv">
+            Tasa Oficial BCV: <span id="precio-bcv">Cargando...</span>
+        </div>
+    </header>
+
+    <button id="btn-bcv" class="btn-glass" aria-label="Cambiar Moneda">
+        <span class="icon">🔄</span>
+        <span id="texto-moneda">VES / USD</span>
+    </button>
+
+    <main class="menu-container">
+        
+        <nav class="tabs" aria-label="Categorías del Menú">
+            <button class="tab-btn active" data-tab="perros">🌭 Perros</button>
+            <button class="tab-btn" data-tab="burgers">🍔 Hamburguesas</button>
+            <button class="tab-btn" data-tab="combos-perros">🥤 Combos Perros</button>
+            <button class="tab-btn" data-tab="combos-burgers">🥤 Combos Burgers</button>
+            <button class="tab-btn" data-tab="combos-papas">🍟 Combos Papas</button>
+            <button class="tab-btn" data-tab="combos-mixtos">👑 Combos Mixtos</button>
+            <button class="tab-btn" data-tab="terneritos">🥖 Terneritos</button>
+            <button class="tab-btn" data-tab="bebidas">🥤 Bebidas</button>
+        </nav>
+
+        <!-- El contenido se generará de manera dinámica via Javascript separando la Vista de los Datos -->
+        <div class="menu-sections-container">
+           <!-- Javascript inyectará aquí los divs con id="perros", id="burgers", etc. --> 
+        </div>
+
+    </main>
+
+    <!-- Botón Flotante Carrito -->
+    <button id="btn-cart" class="btn-glass cart-glass" aria-label="Ver Carrito">
+        <span class="icon">🛒</span>
+        <span class="cart-badge" id="cart-badge">0</span>
+    </button>
+
+    <!-- Modal de Carrito -->
+    <div id="cart-modal" class="cart-modal">
+        <div class="cart-content">
+            <span class="close-cart" id="close-cart">&times;</span>
+            <h2><span class="icon">🛒</span> Tu Pedido</h2>
+            <div id="cart-items-container" class="cart-items-container">
+            </div>
+            <div class="cart-footer">
+                <div class="cart-totals">
+                    <p>Total: <strong id="cart-total-usd">$0.00</strong></p>
+                    <p class="bcv-convers">Aprox: <strong id="cart-total-ves">Bs. 0.00</strong></p>
+                </div>
+                <button id="btn-checkout" class="btn-whatsapp checkout-btn">
+                    Enviar a WhatsApp
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <footer>
+        <p>© 2026 Borguir Food - Escanea y Disfruta</p>
+    </footer>
+
+</body>
+
+</html>
