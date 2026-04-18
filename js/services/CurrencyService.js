@@ -31,6 +31,6 @@ class CurrencyService {
     }
 
     convertir(monto) {
-        return (monto * this.tasaOficial).toFixed(2);
+        return monto * this.tasaOficial;
     }
 }

@@ -142,7 +142,7 @@ class UIController {
         document.getElementById('cart-total-usd').innerText = `$${totalUsd.toFixed(2)}`;
 
         if (this.currency.tasaOficial > 0) {
-            document.getElementById('cart-total-ves').innerText = `Bs. ${this.currency.convertir(totalUsd)}`;
+            document.getElementById('cart-total-ves').innerText = `Bs. ${this.currency.convertir(totalUsd).toFixed(2)}`;
         } else {
             document.getElementById('cart-total-ves').innerText = 'Bs. --';
         }
@@ -215,7 +215,7 @@ class UIController {
             if (enDolares) {
                 elemento.innerText = `$${dolarBase.toFixed(2)}`;
             } else {
-                elemento.innerText = `Bs. ${this.currency.convertir(dolarBase)}`;
+                elemento.innerText = `Bs. ${this.currency.convertir(dolarBase).toFixed(2)}`;
             }
         });
     }
@@ -363,7 +363,7 @@ class UIController {
                     if (this.currency.monedaActual === 'USD') {
                         el.innerText = `$${newPrice.toFixed(2)}`;
                     } else {
-                        el.innerText = `Bs. ${this.currency.convertir(newPrice)}`;
+                        el.innerText = `Bs. ${this.currency.convertir(newPrice).toFixed(2)}`;
                     }
                 });
             })
